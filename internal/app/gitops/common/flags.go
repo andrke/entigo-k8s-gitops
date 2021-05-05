@@ -28,13 +28,14 @@ type GitFlags struct {
 }
 
 type AppFlags struct {
-	Path       string
-	Prefix     string
-	Namespace  string
-	Name       string
-	Branch     string
-	PrefixArgo string
-	PrefixYaml string
+	Path         string
+	Prefix       string
+	Namespace    string
+	Name         string
+	Branch       string
+	SourceBranch string
+	PrefixArgo   string
+	PrefixYaml   string
 }
 
 type ArgoCDFlags struct {
@@ -100,6 +101,7 @@ func (f *Flags) cmdSpecificSetup(cmd Command) {
 	case ArgoCDSyncCmd:
 	case ArgoCDUpdateCmd:
 	case ArgoCDDeleteCmd:
+	case ArgoCDCopyCmd:
 	default:
 		Logger.Fatal(&PrefixedError{Reason: errors.New("unsupported command")})
 

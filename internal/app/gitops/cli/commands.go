@@ -15,6 +15,7 @@ func cliCommands() []*cli.Command {
 		&argoCDSyncCommand,
 		&argoCDUpdateCommand,
 		&argoCDDeleteCommand,
+		&argoCDCopyCommand,
 	}
 }
 
@@ -80,4 +81,12 @@ var argoCDDeleteCommand = cli.Command{
 	Usage:   "deletes ArgoCD application",
 	Action:  action(common.ArgoCDDeleteCmd),
 	Flags:   ArgoCDFlags(common.ArgoCDDeleteCmd),
+}
+
+var argoCDCopyCommand = cli.Command{
+	Name:    "argocd-copy",
+	Aliases: []string{"a-copy"},
+	Usage:   "copies ArgoCD application",
+	Action:  action(common.ArgoCDCopyCmd),
+	Flags:   ArgoCDFlags(common.ArgoCDCopyCmd),
 }

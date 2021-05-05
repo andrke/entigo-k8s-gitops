@@ -33,18 +33,25 @@ func appendArgoCDCmdFlags(baseFlags []cli.Flag, cmd common.Command) []cli.Flag {
 		baseFlags = append(baseFlags, &argoCDCascadeFlag)
 	case common.ArgoCDUpdateCmd:
 		baseFlags = argoCDUpdateSpecificFlags(baseFlags)
+	case common.ArgoCDCopyCmd:
+		baseFlags = argoCDCopySpecificFlags(baseFlags)
 	}
 	return baseFlags
 }
 
-func argoCDUpdateSpecificFlags(baseFlags []cli.Flag) []cli.Flag {
+func appendArgoCDGitFlags(baseFlags []cli.Flag) []cli.Flag {
 	return append(baseFlags,
 		&gitKeyFileFlag,
-		&imagesFlag,
 		&gitStrictHostKeyCheckingFlag,
 		&gitPushFlag,
 		&gitAuthorNameFlag,
-		&gitAuthorEmailFlag,
+		&gitAuthorEmailFlag)
+}
+
+func argoCDUpdateSpecificFlags(baseFlags []cli.Flag) []cli.Flag {
+	baseFlags = appendArgoCDGitFlags(baseFlags)
+	return append(baseFlags,
+		&imagesFlag,
 		&keepRegistryFlag,
 		&deploymentStrategyFlag,
 		&recursiveFlag,
@@ -53,11 +60,21 @@ func argoCDUpdateSpecificFlags(baseFlags []cli.Flag) []cli.Flag {
 		&argoCDWaitFailureFlag)
 }
 
+func argoCDCopySpecificFlags(baseFlags []cli.Flag) []cli.Flag {
+	baseFlags = argoCDUpdateSpecificFlags(baseFlags)
+	return append(baseFlags,
+		&appBranchFlag,
+		&appSourceBranchFlag,
+		&appPrefixArgoFlag,
+		&appPrefixYamlFlag,
+	)
+}
+
 var argoCDServerAddrFlag = cli.StringFlag{
 	Name:        "server",
 	EnvVars:     []string{"ARGO_CD_SERVER"},
 	DefaultText: "",
-	Usage:       "Server tcp address with port",
+	Usage:       "server tcp address with port",
 	Destination: &flags.ArgoCD.ServerAddr,
 	Required:    true,
 }
@@ -67,7 +84,7 @@ var argoCDInsecureFlag = cli.BoolFlag{
 	EnvVars:     []string{"ARGO_CD_INSECURE"},
 	Value:       false,
 	DefaultText: "false",
-	Usage:       "Insecure connection",
+	Usage:       "insecure connection",
 	Destination: &flags.ArgoCD.Insecure,
 	Required:    false,
 }
@@ -77,7 +94,7 @@ var argoCDTokenFlag = cli.StringFlag{
 	Aliases:     []string{"token"},
 	EnvVars:     []string{"ARGO_CD_TOKEN"},
 	DefaultText: "",
-	Usage:       "Authentication token",
+	Usage:       "authentication token",
 	Destination: &flags.ArgoCD.AuthToken,
 	Required:    true,
 }
@@ -87,7 +104,7 @@ var argoCDTimeoutFlag = cli.IntFlag{
 	EnvVars:     []string{"ARGO_CD_TIMEOUT"},
 	Value:       300,
 	DefaultText: "300",
-	Usage:       "Timeout for single ArgoCD operation",
+	Usage:       "timeout for single ArgoCD operation",
 	Destination: &flags.ArgoCD.Timeout,
 	Required:    false,
 }
@@ -97,7 +114,7 @@ var argoCDGRPCWebFlag = cli.BoolFlag{
 	EnvVars:     []string{"ARGO_CD_GRPC_WEB"},
 	Value:       false,
 	DefaultText: "false",
-	Usage:       "Enables gRPC-web protocol. Useful if Argo CD server is behind proxy which does not support HTTP2",
+	Usage:       "enables gRPC-web protocol. Useful if Argo CD server is behind proxy which does not support HTTP2",
 	Destination: &flags.ArgoCD.GRPCWeb,
 	Required:    false,
 }
@@ -107,7 +124,7 @@ var argoCDSyncFlag = cli.BoolFlag{
 	EnvVars:     []string{"ARGO_CD_SYNC"},
 	Value:       true,
 	DefaultText: "true",
-	Usage:       "Sync the application after update",
+	Usage:       "sync the application after update",
 	Destination: &flags.ArgoCD.Sync,
 	Required:    false,
 }
@@ -117,7 +134,7 @@ var argoCDAsyncFlag = cli.BoolFlag{
 	EnvVars:     []string{"ARGO_CD_ASYNC"},
 	Value:       false,
 	DefaultText: "false",
-	Usage:       "Don't wait for sync to complete",
+	Usage:       "don't wait for sync to complete",
 	Destination: &flags.ArgoCD.Async,
 	Required:    false,
 }
@@ -127,7 +144,7 @@ var argoCDWaitFailureFlag = cli.BoolFlag{
 	EnvVars:     []string{"ARGO_CD_WAIT_FAILURE"},
 	Value:       true,
 	DefaultText: "true",
-	Usage:       "Fail the command when waiting for the sync to complete exceeds the timeout",
+	Usage:       "fail the command when waiting for the sync to complete exceeds the timeout",
 	Destination: &flags.ArgoCD.WaitFailure,
 	Required:    false,
 }
@@ -137,7 +154,16 @@ var argoCDCascadeFlag = cli.BoolFlag{
 	EnvVars:     []string{"ARGO_CD_CASCADE"},
 	Value:       true,
 	DefaultText: "true",
-	Usage:       "Perform a cascaded deletion of all application resources",
+	Usage:       "perform a cascaded deletion of all application resources",
 	Destination: &flags.ArgoCD.Async,
 	Required:    false,
+}
+
+var appSourceBranchFlag = cli.StringFlag{
+	Name:        "app-source-branch",
+	EnvVars:     []string{"APP_SOURCE_BRANCH"},
+	DefaultText: "",
+	Usage:       "application source branch `name`",
+	Destination: &flags.App.SourceBranch,
+	Required:    true,
 }

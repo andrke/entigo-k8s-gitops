@@ -2,6 +2,7 @@ package cli
 
 import (
 	"errors"
+	argoCDCopy "github.com/entigolabs/entigo-k8s-gitops/internal/app/gitops/argocd/commands/copy"
 	argoCDDelete "github.com/entigolabs/entigo-k8s-gitops/internal/app/gitops/argocd/commands/delete"
 	argoCDGet "github.com/entigolabs/entigo-k8s-gitops/internal/app/gitops/argocd/commands/get"
 	argoCDSync "github.com/entigolabs/entigo-k8s-gitops/internal/app/gitops/argocd/commands/sync"
@@ -42,6 +43,8 @@ func run(cmd common.Command) {
 		argoCDUpdate.Run(flags)
 	case common.ArgoCDDeleteCmd:
 		argoCDDelete.Run(flags)
+	case common.ArgoCDCopyCmd:
+		argoCDCopy.Run(flags)
 	default:
 		common.Logger.Fatal(&common.PrefixedError{Reason: errors.New("unsupported command")})
 	}
