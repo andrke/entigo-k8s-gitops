@@ -55,6 +55,9 @@ func copyAndDeleteSpecificFlags(baseFlags []cli.Flag) []cli.Flag {
 	baseFlags = append(baseFlags, &appPrefixArgoFlag)
 	baseFlags = append(baseFlags, &appPrefixYamlFlag)
     baseFlags = append(baseFlags, &appDomainFlag)
+    baseFlags = append(baseFlags, &appPathFlag)
+    baseFlags = append(baseFlags, &appArgoAppsPathFlag)
+    baseFlags = append(baseFlags, &appUsePrefixedPathFlag)
 	return baseFlags
 }
 
@@ -136,6 +139,23 @@ var appPathFlag = cli.StringFlag{
 	DefaultText: "",
 	Usage:       "path to application folder",
 	Destination: &flags.App.Path,
+}
+
+var appArgoAppsPathFlag = cli.StringFlag{
+	Name:        "app-argoapps-path",
+	EnvVars:     []string{"APP_ARGOAPPS_PATH"},
+	DefaultText: "",
+	Usage:       "path to argoapps folder",
+	Destination: &flags.App.ArgoAppsPath,
+}
+
+var appUsePrefixedPathFlag = cli.BoolFlag{
+	Name:        "app-use-prefixed-path",
+	EnvVars:     []string{"APP_USE_PREFIXED_PATH"},
+	DefaultText: strconv.FormatBool(true),
+	Value:       true,
+	Usage:       "Use prefixed path",
+	Destination: &flags.App.UsePrefixedPath,
 }
 
 var appPrefixFlag = cli.StringFlag{

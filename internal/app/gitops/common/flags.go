@@ -28,14 +28,16 @@ type GitFlags struct {
 }
 
 type AppFlags struct {
-	Path       string
-	Prefix     string
-	Namespace  string
-	Name       string
-	Branch     string
-	PrefixArgo string
-	PrefixYaml string
-    Domain     string
+	Path            string
+	Prefix          string
+	Namespace       string
+	Name            string
+	Branch          string
+	PrefixArgo      string
+	PrefixYaml      string
+    Domain          string
+    ArgoAppsPath    string
+    UsePrefixedPath   bool
 }
 
 type ArgoCDFlags struct {
@@ -69,6 +71,12 @@ func (f *Flags) ComposeYamlPath() string {
 }
 
 func (f *Flags) ComposeArgoPath() string {
+
+    if !f.App.UsePrefixedPath && f.App.ArgoAppsPath != "" {
+        Logger.Println("Using argoapps from: %s", f.App.ArgoAppsPath )
+        return f.App.ArgoAppsPath
+    }
+
 	yamlPath := ""
 	if f.App.Prefix != "" {
 		yamlPath = appendSlash(f.App.Prefix)
@@ -78,7 +86,12 @@ func (f *Flags) ComposeArgoPath() string {
 }
 
 func (f *Flags) composeAppPath() {
-	f.App.Path = fmt.Sprintf("%s/%s/%s", f.App.Prefix, f.App.Namespace, f.App.Name)
+    if !f.App.UsePrefixedPath && f.App.Path != "" {
+        Logger.Println("Using application from: %s", f.App.Path )
+        f.App.Path = fmt.Sprintf("%s",f.App.Path)
+    } else {
+	    f.App.Path = fmt.Sprintf("%s/%s/%s", f.App.Prefix, f.App.Namespace, f.App.Name)
+	}
 }
 
 func (f *Flags) setup() {
