@@ -58,6 +58,10 @@ func copyAndDeleteSpecificFlags(baseFlags []cli.Flag) []cli.Flag {
     baseFlags = append(baseFlags, &appPathFlag)
     baseFlags = append(baseFlags, &appArgoAppsPathFlag)
     baseFlags = append(baseFlags, &appUsePrefixedPathFlag)
+    baseFlags = append(baseFlags, &appUseKustomizeFlag)
+    baseFlags = append(baseFlags, &appKustomizeTemplatePathFlag)
+    baseFlags = append(baseFlags, &appKustomizeServiceFileFlag)
+    baseFlags = append(baseFlags, &appKustomizeDeployFileFlag)
 	return baseFlags
 }
 
@@ -137,7 +141,7 @@ var appPathFlag = cli.StringFlag{
 	Name:        "app-path",
 	EnvVars:     []string{"APP_PATH"},
 	DefaultText: "",
-	Usage:       "path to application folder",
+	Usage:       "`path` to application folder",
 	Destination: &flags.App.Path,
 }
 
@@ -145,10 +149,33 @@ var appArgoAppsPathFlag = cli.StringFlag{
 	Name:        "app-argoapps-path",
 	EnvVars:     []string{"APP_ARGOAPPS_PATH"},
 	DefaultText: "",
-	Usage:       "path to argoapps folder",
+	Usage:       "`path` to argoapps folder",
 	Destination: &flags.App.ArgoAppsPath,
 }
 
+var appKustomizeTemplatePathFlag = cli.StringFlag{
+	Name:        "app-kustomize-template-path",
+	EnvVars:     []string{"APP_KUSTOMIZE_TEMPLATE_PATH"},
+	DefaultText: "",
+	Usage:       "`path` to kustomize template folder",
+	Destination: &flags.App.KustomizeTemplatePath,
+}
+
+var appKustomizeServiceFileFlag = cli.StringFlag{
+	Name:        "app-kustomize-service-template",
+	EnvVars:     []string{"APP_KUSTOMIZE_SERVICE_TEMPLATE"},
+	DefaultText: "service.yaml",
+	Usage:       "filename of kustomize service template",
+	Destination: &flags.App.KustomizeServiceFile,
+}
+
+var appKustomizeDeployFileFlag = cli.StringFlag{
+	Name:        "app-kustomize-deployment-template",
+	EnvVars:     []string{"APP_KUSTOMIZE_DEPLOYMENT_TEMPLATE"},
+	DefaultText: "deployment.yaml",
+	Usage:       "filename of kustomize deployment template",
+	Destination: &flags.App.KustomizeDeployFile,
+}
 var appUsePrefixedPathFlag = cli.BoolFlag{
 	Name:        "app-use-prefixed-path",
 	EnvVars:     []string{"APP_USE_PREFIXED_PATH"},
@@ -156,6 +183,15 @@ var appUsePrefixedPathFlag = cli.BoolFlag{
 	Value:       true,
 	Usage:       "Use prefixed path",
 	Destination: &flags.App.UsePrefixedPath,
+}
+
+var appUseKustomizeFlag = cli.BoolFlag{
+	Name:        "app-use-kustomize",
+	EnvVars:     []string{"APP_USE_KUSTOMIZE"},
+	DefaultText: strconv.FormatBool(false),
+	Value:       false,
+	Usage:       "Use kustomize to copy app",
+	Destination: &flags.App.UseKustomize,
 }
 
 var appPrefixFlag = cli.StringFlag{

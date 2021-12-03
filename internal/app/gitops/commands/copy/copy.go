@@ -14,7 +14,11 @@ func Run(flags *common.Flags) {
 	repo := initWorkingRepo(flags)
 	cloneOrPull(flags, repo)
 	copyMasterToNewBranch(flags)
-	installViaFile(flags)
+	if flags.App.UseKustomize {
+        installViaKustomize(flags)
+    } else {
+    	installViaFile(flags)
+	}
 	installArgoApp(flags)
 	applyChanges(repo)
 	pushOnDemand(flags, repo)

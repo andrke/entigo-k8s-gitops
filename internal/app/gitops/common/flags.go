@@ -28,16 +28,20 @@ type GitFlags struct {
 }
 
 type AppFlags struct {
-	Path            string
-	Prefix          string
-	Namespace       string
-	Name            string
-	Branch          string
-	PrefixArgo      string
-	PrefixYaml      string
-    Domain          string
-    ArgoAppsPath    string
-    UsePrefixedPath   bool
+	Path                         string
+	Prefix                       string
+	Namespace                    string
+	Name                         string
+	Branch                       string
+	PrefixArgo                   string
+	PrefixYaml                   string
+    Domain                       string
+    ArgoAppsPath                 string
+    UsePrefixedPath              bool
+    UseKustomize                 bool
+    KustomizeTemplatePath        string
+    KustomizeServiceFile         string
+    KustomizeDeployFile          string
 }
 
 type ArgoCDFlags struct {
